@@ -28,3 +28,5 @@ WORKDIR /srv/$APP_NAME
 
 RUN rails app:template LOCATION=./application_template.rb && \
 	bundle install
+
+VOLUME ["/srv/$APP_NAME"]
