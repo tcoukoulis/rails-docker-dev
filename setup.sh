@@ -32,12 +32,32 @@ sync() {
   docker container rm $CONTAINER_ID
 }
 
+update-db-config() {
+    DATABASE_CONFIG=services/${APP_NAME}/config/database.yml
+    POSTGRES_IMAGE_USER=postgres
+    POSTGRES_IMAGE_PW=postgres
+    POSTGRES_IMAGE_DB=postgres
+    DATABASE_IMAGE_NAME=database
+
+    echo "Updating development database name..."
+    sed -i '' -e "s/^${APP_NAME}_development$/${POSTGRES_IMAGE_DB}/g" $DATABASE_CONFIG
+    echo "Updating development database username..."
+    sed -i '' -E "s/^(  )#(username: )${APP_NAME}/\1\2${POSTGRES_IMAGE_USER}/g" $DATABASE_CONFIG
+    echo "Updating development database password..."
+    sed -i '' -E "s/^(  )#(password:)$/\1\2 ${POSTGRES_IMAGE_PW}/g" $DATABASE_CONFIG
+    echo "Updating development database host..."
+    sed -i '' -E "s/^(  )#(host: )localhost$/\1\2${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
+    echo "Updating development database port..."
+    sed -i '' -E "s/^(  )#(port: )5432$/\1\2${DATABASE_PORT}/g" $DATABASE_CONFIG
+}
+
 echo "Building initial image..."
 build
 echo "Making services/$APP_NAME directory..."
 mkdir -p services/$APP_NAME
 echo "Syncing container's /srv/$APP_NAME with services/$APP_NAME..."
 sync
+update-db-config
 # Add option to get stdin and see if user wants to spin docker up automatically
 cat << EOF
 Setup complete...
