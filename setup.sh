@@ -40,7 +40,7 @@ update-db-config() {
     DATABASE_IMAGE_NAME=database
 
     echo "Updating development database name..."
-    sed -i '' -e "s/^${APP_NAME}_development$/${POSTGRES_IMAGE_DB}/g" $DATABASE_CONFIG
+    sed -i '' -E "s/^(  database: )${APP_NAME}_development$/\1${POSTGRES_IMAGE_DB}/g" $DATABASE_CONFIG
     echo "Updating development database username..."
     sed -i '' -E "s/^(  )#(username: )${APP_NAME}/\1\2${POSTGRES_IMAGE_USER}/g" $DATABASE_CONFIG
     echo "Updating development database password..."
