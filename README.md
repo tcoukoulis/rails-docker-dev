@@ -39,6 +39,6 @@ This has only been test on Mac OS. Linux might work. YMMV. Windows? No idea.
 
 This project assumes passing familiarity with Docker and Docker Compose.
 
-At the current stage, only Postgres is supported. The hope is that MySQL and Sqlite support will be added on as well. (Sqlite might already work but hasn't been tested.)
+At the current stage, only Postgres and Sqlite are supported. The hope is that MySQL upport will be added on as well.
 
 At this time there's no plan to automatically support running the Dockerized Rails application the production environment. Running the Rails application in the test environment isn't supported yet either, but possibly one day.
