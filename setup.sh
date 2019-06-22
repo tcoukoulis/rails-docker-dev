@@ -85,11 +85,6 @@ docker-compose-up() {
       *)
 	echo "Falling back to sqlite as datastore..."
 	(cd services/$APP_NAME && docker-compose up -d rails)
-	# TODO: Get this working with docker compose
-	# docker run -d -p "${RAILS_LISTEN_PORT}:3000" \
-	  # --name $BOOTSTRAP_CONTAINER_NAME \
-	  # "${BOOTSTRAP_CONTAINER_NAME}:${BOOTSTRAP_CONTAINER_VERSION}" \
-	  # rails s -b '0.0.0.0'
         ;;
     esac
 }
@@ -98,7 +93,7 @@ goodbye() {
     cat << EOF
 Setup complete...
 
-Your Rails $RAILS_VERSION application will be ready and waiting for you at http://localhost:$RAILS_LISTEN_PORT
+Your Rails $RAILS_VERSION application is waiting for you at http://localhost:<3000|your configured port>
 
 Change directories to services/$APP_NAME and get to work!
 
