@@ -25,6 +25,7 @@ services:
   mysql:
     container_name: mysql
     environment:
+      MYSQL_DATABASE: "${APP_NAME}_development"
       MYSQL_ROOT_PASSWORD: root
     image: mysql:5.7
     ports:

@@ -59,10 +59,13 @@ update-db-config() {
 	echo "Updating development database port..."
 	sed -i '' -E "s/^(  )#(port: 5432)$/\1\2/g" $DATABASE_CONFIG
       elif [[ "$RAILS_DATABASE_ENGINE" = "mysql" ]]; then
+	MYSQL_IMAGE_PW=root
 	DATABASE_IMAGE_NAME=mysql
 
+	echo "Updating development database password..."
+	sed -i '' -E "s/^(  password:)$/\1 ${MYSQL_IMAGE_PW}/g" $DATABASE_CONFIG
 	echo "Updating development database host..."
-	sed -i '' -E "s/^(  )#(host: )localhost$/\1\2${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
+	sed -i '' -E "s/^(  host: )localhost$/\1${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
 	echo "Updating development database port..."
 	sed -i '' -E "s/^(  )#(port: )3306$/\1\2/g" $DATABASE_CONFIG
       fi
