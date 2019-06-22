@@ -40,12 +40,13 @@ sync() {
 }
 
 update-db-config() {
-    if [[ -z "$DATABASE_IMAGE" ]]; then
-	DATABASE_CONFIG=services/${APP_NAME}/config/database.yml
+      DATABASE_CONFIG=services/${APP_NAME}/config/database.yml
+
+      if [[ "$RAILS_DATABASE_ENGINE" = "postgresql" ]]; then
 	POSTGRES_IMAGE_USER=postgres
 	POSTGRES_IMAGE_PW=postgres
 	POSTGRES_IMAGE_DB=postgres
-	DATABASE_IMAGE_NAME=database
+	DATABASE_IMAGE_NAME=postgres
 
 	echo "Updating development database name..."
 	sed -i '' -E "s/^(  database: )${APP_NAME}_development$/\1${POSTGRES_IMAGE_DB}/g" $DATABASE_CONFIG
@@ -56,22 +57,36 @@ update-db-config() {
 	echo "Updating development database host..."
 	sed -i '' -E "s/^(  )#(host: )localhost$/\1\2${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
 	echo "Updating development database port..."
-	sed -i '' -E "s/^(  )#(port: )5432$/\1\2${DATABASE_PORT}/g" $DATABASE_CONFIG
-    fi
+	sed -i '' -E "s/^(  )#(port: 5432)$/\1\2/g" $DATABASE_CONFIG
+      elif [[ "$RAILS_DATABASE_ENGINE" = "mysql" ]]; then
+	DATABASE_IMAGE_NAME=mysql
+
+	echo "Updating development database host..."
+	sed -i '' -E "s/^(  )#(host: )localhost$/\1\2${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
+	echo "Updating development database port..."
+	sed -i '' -E "s/^(  )#(port: )3306$/\1\2/g" $DATABASE_CONFIG
+      fi
 }
 
 docker-compose-up() {
     echo "Booting up Rails.."
-    case $DATABASE_IMAGE in
-      "postgres"|"mysql")
-	(cd services/$APP_NAME && docker-compose up -d)
+    case "$RAILS_DATABASE_ENGINE" in
+      postgresql)
+	echo "Using postgres as datastore..."
+	(cd services/$APP_NAME && docker-compose up -d rails postgres)
+        ;;
+      mysql)
+	echo "Using mysql as datastore..."
+	(cd services/$APP_NAME && docker-compose up -d rails mysql)
         ;;
       *)
+	echo "Falling back to sqlite as datastore..."
+	(cd services/$APP_NAME && docker-compose up -d rails)
 	# TODO: Get this working with docker compose
-	docker run -d -p "${RAILS_LISTEN_PORT}:3000" \
-	  --name $BOOTSTRAP_CONTAINER_NAME \
-	  "${BOOTSTRAP_CONTAINER_NAME}:${BOOTSTRAP_CONTAINER_VERSION}" \
-	  rails s -b '0.0.0.0'
+	# docker run -d -p "${RAILS_LISTEN_PORT}:3000" \
+	  # --name $BOOTSTRAP_CONTAINER_NAME \
+	  # "${BOOTSTRAP_CONTAINER_NAME}:${BOOTSTRAP_CONTAINER_VERSION}" \
+	  # rails s -b '0.0.0.0'
         ;;
     esac
 }
