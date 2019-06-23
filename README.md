@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The goal of this project is to make setting up a hobby Rails application in Docker as easy and as flexible as possible.
+The goal of this project is to make setting up a hobby Rails application in Docker as easy and as flexible as possible without requiring a developer to configure, install and manage versions of Ruby and Node.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Clone this repo:
 clone this repo
 ```
 
-Copy the `example.env` file to `.env` and configure it's settings to target the version of Rails you want to tinker with.
+Copy the `example.env` file to `.env` and configure it's settings to target the version of Rails/database you want to tinker with.
 
 Alternatively, don't configure the file. The defaults are enough to get you set up and going.
 
@@ -38,7 +38,5 @@ Your Rails application awaits at `http://localhost:<your_configurable_port>`!
 This has only been test on Mac OS. Linux might work. YMMV. Windows? No idea.
 
 This project assumes passing familiarity with Docker and Docker Compose.
-
-At the current stage, only Postgres and Sqlite are supported. The hope is that MySQL upport will be added on as well.
 
 At this time there's no plan to automatically support running the Dockerized Rails application the production environment. Running the Rails application in the test environment isn't supported yet either, but possibly one day.
