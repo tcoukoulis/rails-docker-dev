@@ -27,6 +27,7 @@ COPY . /srv/$APP_NAME/
 WORKDIR /srv/$APP_NAME
 
 RUN rails app:template LOCATION=./application_template.rb && \
-	bundle install
+	bundle install && \
+	ruby -v | awk {'print $1 " " $2'} | tr ' ' '-' | cut -c 1-10 | xargs echo > .ruby-version
 
 VOLUME ["/srv/$APP_NAME"]
