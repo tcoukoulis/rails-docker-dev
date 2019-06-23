@@ -11,10 +11,10 @@ The goal of this project is to make setting up a hobby Rails application in Dock
 
 ## Usage
 
-Clone this repo:
+### Clone the repository
 
 ```
-clone this repo
+git clone git@github.com:tcoukoulis/rails-docker-dev.git
 ```
 
 Copy the `example.env` file to `.env` and configure it's settings to target the version of Rails/database you want to tinker with.
@@ -25,7 +25,15 @@ Alternatively, don't configure the file. The defaults are enough to get you set 
 cp -p example.env .env
 ```
 
-Run the setup script:
+_Note: by default the datastore will be set to use a [Postgres](https://hub.docker.com/_/postgres) container._
+
+### Configure
+
+By default the Rails application will start up no custom gems. Configure your Rails application to use whatever gems you require by modifying the [application_template.rb](https://github.com/tcoukoulis/rails-docker-dev/blob/master/application_template.rb) file.
+
+Read more about application templates in the Rails [Guide](https://guides.rubyonrails.org/rails_application_templates.html).
+
+### Run the setup script
 
 ```
 ./setup.sh
