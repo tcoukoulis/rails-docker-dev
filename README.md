@@ -7,7 +7,9 @@ The goal of this project is to make setting up a hobby Rails application in Dock
 ## Requirements
 
 * Docker
+* Docker Compose
 * Bash
+* Git
 
 ## Usage
 
