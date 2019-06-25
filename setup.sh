@@ -36,7 +36,6 @@ sync() {
     docker run --name $BOOTSTRAP_CONTAINER_NAME $BOOTSTRAP_CONTAINER_NAME:$BOOTSTRAP_CONTAINER_VERSION
     CONTAINER_ID=$(docker container ls -aq -f name=^$BOOTSTRAP_CONTAINER_NAME$)
     docker cp $CONTAINER_ID:/srv/$APP_NAME/ services/
-    rm -rf services/$APP_NAME/.git
     (cd services/$APP_NAME && git init)
     docker container rm $CONTAINER_ID
 }
