@@ -7,6 +7,7 @@ services:
     build:
       context: .
       args:
+        API_MODE: $API_MODE
         APP_NAME: $APP_NAME
         RAILS_DATABASE_ENGINE: $RAILS_DATABASE_ENGINE
         RAILS_VERSION: $RAILS_VERSION

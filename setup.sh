@@ -11,7 +11,8 @@ BOOTSTRAP_CONTAINER_VERSION=0.1.0
 
 build() {
     echo "Building initial image..."
-    docker build --build-arg APP_NAME=$APP_NAME \
+    docker build --build-arg API_MODE=$API_MODE \
+	    --build-arg APP_NAME=$APP_NAME \
 	    --build-arg RAILS_DATABASE_ENGINE=$RAILS_DATABASE_ENGINE \
 	    --build-arg RAILS_VERSION=$RAILS_VERSION \
 	    --build-arg SKIP_TEST_UNIT=$SKIP_TEST_UNIT \
