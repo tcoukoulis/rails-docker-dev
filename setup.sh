@@ -8,6 +8,21 @@ source .env
 
 BOOTSTRAP_CONTAINER_NAME=${APP_NAME}
 BOOTSTRAP_CONTAINER_VERSION=0.1.0
+DATABASE_ENGINE=""
+match=""
+BASH_REMATCH=""
+
+set-database-engine-var() {
+    if [[ "$SHELL" =~ "zsh" ]]; then
+	if [[ "$RAILS_DATABASE_ENGINE" =~ ^--database=(.+)$ ]]; then
+	    DATABASE_ENGINE=$match[1]
+	fi
+    else
+	if [[ "$RAILS_DATABASE_ENGINE" =~ ^--database=(.+)$ ]]; then
+	    DATABASE_ENGINE=${BASH_REMATCH[1]}
+	fi
+    fi
+}
 
 build() {
     echo "Building initial image..."
@@ -43,8 +58,9 @@ sync() {
 
 update-db-config() {
       DATABASE_CONFIG=services/${APP_NAME}/config/database.yml
+      set-database-engine-var
 
-      if [[ "$RAILS_DATABASE_ENGINE" = "postgresql" ]]; then
+      if [[ "$DATABASE_ENGINE" = "postgresql" ]]; then
 	POSTGRES_IMAGE_USER=postgres
 	POSTGRES_IMAGE_PW=postgres
 	POSTGRES_IMAGE_DB=postgres
@@ -60,7 +76,7 @@ update-db-config() {
 	sed -i '' -E "s/^(  )#(host: )localhost$/\1\2${DATABASE_IMAGE_NAME}/g" $DATABASE_CONFIG
 	echo "Updating development database port..."
 	sed -i '' -E "s/^(  )#(port: 5432)$/\1\2/g" $DATABASE_CONFIG
-      elif [[ "$RAILS_DATABASE_ENGINE" = "mysql" ]]; then
+      elif [[ "$DATABASE_ENGINE" = "mysql" ]]; then
 	MYSQL_IMAGE_PW=root
 	DATABASE_IMAGE_NAME=mysql
 
@@ -76,11 +92,11 @@ update-db-config() {
 docker-compose-up() {
     echo "Booting up Rails.."
     case "$RAILS_DATABASE_ENGINE" in
-      postgresql)
+      --database=postgresql)
 	echo "Using postgres as datastore..."
 	(cd services/$APP_NAME && docker-compose up -d rails postgres)
         ;;
-      mysql)
+      --database=mysql)
 	echo "Using mysql as datastore..."
 	(cd services/$APP_NAME && docker-compose up -d rails mysql)
         ;;
