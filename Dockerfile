@@ -2,10 +2,10 @@ FROM ruby:2.6.3-alpine3.9
 
 ARG API_MODE=""
 ARG APP_NAME=app
-ARG RAILS_DATABASE_ENGINE=postgresql
+ARG RAILS_DATABASE_ENGINE="--database=postgresql"
 ARG RAILS_VERSION=5.2.3
 ARG SKIP_TEST_UNIT=""
-ARG VIEW_ENGINE=react
+ARG VIEW_ENGINE=""
 
 RUN apk add build-base=0.5-r1 \
 	mariadb-dev=10.3.15-r0 \
@@ -19,8 +19,8 @@ RUN apk add build-base=0.5-r1 \
 
 WORKDIR /srv
 
-RUN rails new $APP_NAME --database=$RAILS_DATABASE_ENGINE \
-	--webpack=$VIEW_ENGINE \
+RUN rails new $APP_NAME $RAILS_DATABASE_ENGINE \
+	$VIEW_ENGINE \
 	$API_MODE \
 	$SKIP_TEST_UNIT
 
